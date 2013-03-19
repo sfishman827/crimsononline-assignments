@@ -1,3 +1,6 @@
+import re
+import lxml.html
+
 def parse_links_regex(filename):
     """question 2a
 
@@ -14,7 +17,13 @@ def parse_links_regex(filename):
 
     What does it make the most sense to do here? 
     """
-    pass
+    f = open(filename)
+    text = f.read()
+    tuples = re.findall(r'<a .*?href="(.*)".*?>(.*?)</a>', text, re.IGNORECASE)
+    result = []
+    for obj in tuples:
+        result.append(obj[::-1])
+    return result
 
 def parse_links_xpath(filename):
     """question 2b
@@ -24,4 +33,9 @@ def parse_links_xpath(filename):
     
     Which approach is better? (Hint: http://goo.gl/mzl9t)
     """
-    pass
+    result = []
+    it = lxml.html.iterlinks(open(filename).read())
+    for anchor in it:
+        if not anchor[0].text == None:
+            result.append((anchor[0].text, anchor[2]))
+    return result

@@ -41,12 +41,103 @@ g)  With a minimum of code duplication, modify the Building class so that
 """
 
 class Person:
-    def __init__(self):
-        pass
+    
+    def __init__(self, name, gender):
+        if gender == 'M' or gender == 'F':
+            self.gender = gender
+        else:
+            raise Exception('Invalid Gender')
+
+        try:
+            if name.split()[0][0].isupper() and name.split()[1][0].isupper():
+                self.name = name
+            else:
+                raise Exception('Invalid Name')
+        except IndexError:
+            raise Exception('Invalid Name')
+
+        self.inbuilding = None
+
+    def leave(self):
+        self.inbuilding.leave(self)
+
+    def __repr__(self):
+        return self.name
 
 class Building:
+    def __init__(self, location):
+        self.people = {}
+        self.loc = location
+    
     def enter(self, person, room_no):
-        pass
+        if not person.inbuilding == None:
+            person.leave()
+
+        person.inbuilding = self
+        
+        self.people[person] = room_no
+        
+    def leave(self, person):
+        del self.people[person]
+
+    def where_is(self, person):
+        if person in self.people:
+            return self.people[person]
+        else:
+            return 'Not here'
+
+    def __setitem__(self, room, person):
+        self.enter(person, room)
+
+    def __iter__(self):
+        return iter(self.people)
+
+class OfficeBuilding(Building):
+    def __init__(self, location, employeelist):
+        self.employees = employeelist
+        Building.__init__(self, location)
+
+    def enter(self, person, room_no):
+        if person in self.employees:
+            Building.enter(self, person, room_no)
+        else:
+            print 'Not an employee'
+
+class Home(Building):
+    def enter(self, person):
+        Building.enter(self, person, 0)
 
     def where_is(self, person):
         pass
+
+    def at_home(self, person):
+        return person in self.people
+
+    def __setitem__(self, room, person):
+        print 'No room numbers here!'
+
+class Client:
+    def __init__(self):
+        self.map = []
+
+    def add_building(self, bldg):
+        if self.bldg_at(bldg.loc) == None:
+            self.map.append(bldg)
+        else:
+            print 'There is already a building at ' + str(bldg.loc)
+            
+
+    def bldg_at(self, location):
+        for bldg in self.map:
+            if bldg.loc == location:
+                return bldg
+        return None
+
+
+sam = Person('Sam Fishman', 'M')
+dan = Person('Dan Yue', 'M')
+weld = Building((1,3))
+weld.enter(sam, 54)
+kirkland = Building((1,2))
+kirkland.enter(sam,'JCR')
+crim = OfficeBuilding((2,3), (sam, dan))
