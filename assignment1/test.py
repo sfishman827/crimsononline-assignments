@@ -29,9 +29,9 @@ print
 
 print "==testing question 2=="
 print "regex... ",
-#pprint(parse_links_regex("crimson.html"))
+pprint(parse_links_regex("crimson.html"))
 print "xpath...",
-#pprint(parse_links_xpath("crimson.html"))
+pprint(parse_links_xpath("crimson.html"))
 print
 
 
@@ -64,4 +64,9 @@ print
 
 print "==testing question 4=="
 print "github url: {}".format(GITHUB_URL)
+print
+
+
+print "==testing question 5=="
+import question5
 print
