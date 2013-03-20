@@ -132,12 +132,3 @@ class Client:
             if bldg.loc == location:
                 return bldg
         return None
-
-
-sam = Person('Sam Fishman', 'M')
-dan = Person('Dan Yue', 'M')
-weld = Building((1,3))
-weld.enter(sam, 54)
-kirkland = Building((1,2))
-kirkland.enter(sam,'JCR')
-crim = OfficeBuilding((2,3), (sam, dan))
